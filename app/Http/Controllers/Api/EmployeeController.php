@@ -28,6 +28,34 @@ class EmployeeController extends Controller
         }
     }
 
+    /**
+ * @OA\Get(
+ *      path="/emp/pedidos",
+ *      operationId="obtenerPedidosEmpleado",
+ *      tags={"Empleado"},
+ *      summary="Obtener los pedidos de un empleado",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Response(
+ *          response=200,
+ *          description="Pedidos obtenidos exitosamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Pedidos obtenidos exitosamente")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object", nullable=true)
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      )
+ * )
+ */
     public function pedidos(Request $request) {
 
         if (auth()->user()->role_id===3) {
@@ -46,6 +74,54 @@ class EmployeeController extends Controller
         }
     }
 
+    /**
+ * @OA\Put(
+ *      path="/emp/pedido/{id}",
+ *      operationId="finalizarPedido",
+ *      tags={"Empleado"},
+ *      summary="Finalizar un pedido",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          description="ID del pedido",
+ *          required=true,
+ *          in="path",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="estado", type="string", enum={"finalizado", "aprobado"}, example="finalizado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Estado del pedido modificado correctamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Estado modificado correctamente")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object", nullable=true)
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Pedido no encontrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Pedido no encontrado")
+ *          )
+ *      )
+ * )
+ */
     public function finalizarPedido(Request $request, $id)
     {
         if (auth()->user()->role_id===3) {

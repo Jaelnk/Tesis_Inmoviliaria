@@ -37,6 +37,42 @@ class AdminController extends Controller
     }
 
 
+
+    /**
+ * @OA\Post(
+ *      path="/register/employee",
+ *      operationId="registerEmployee",
+ *      tags={"Admin"},
+ *      summary="Registrar nuevo empleado",
+ *      security={{ "sanctum":{} }},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="name", type="string", example="John Doe"),
+ *              @OA\Property(property="email", type="string", example="johndoe@example.com"),
+ *              @OA\Property(property="password", type="string", example="password123"),
+ *              @OA\Property(property="cedula", type="string", example="1234567890"),
+ *              @OA\Property(property="celular", type="string", example="1234567890"),
+ *              @OA\Property(property="fnac", type="string", format="date", example="1990-01-01"),
+ *              @OA\Property(property="direccion", type="string", example="123 Main St")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Empleado registrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Método registerEmployee exitoso")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado o error de validación",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado o error de validación")
+ *          )
+ *      )
+ * )
+ */
     public function registerEmployee(Request $request) {
 
         if (auth()->user()->role_id===1) {
@@ -84,6 +120,34 @@ class AdminController extends Controller
     }
 
 //CRUD CATEGORIAS
+
+/**
+ * @OA\Get(
+ *      path="/admin/categories",
+ *      operationId="getCategories",
+ *      tags={"Admin"},
+ *      summary="Obtener todas las categorías",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Response(
+ *          response=200,
+ *          description="Lista de categorías",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="OK")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      )
+ * )
+ */
     public function indexCat()
     {
         if (auth()->user()->role_id===1) {
@@ -97,6 +161,47 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Post(
+ *      path="/admin/categories",
+ *      operationId="createCategoria",
+ *      tags={"Admin"},
+ *      summary="Crear una nueva categoría",
+ *      security={{ "sanctum":{} }},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="nombre", type="string", example="Nombre de la categoría"),
+ *              @OA\Property(property="descripcion", type="string", example="Descripción de la categoría"),
+ *              @OA\Property(property="image_url", type="string", format="binary", description="Imagen de la categoría")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=201,
+ *          description="Categoría creada",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="id", type="integer"),
+ *              @OA\Property(property="nombre", type="string"),
+ *              @OA\Property(property="descripcion", type="string"),
+ *              @OA\Property(property="image_url", type="string"),
+ *              @OA\Property(property="created_at", type="string", format="date-time"),
+ *              @OA\Property(property="updated_at", type="string", format="date-time")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      )
+ * )
+ */
     public function storeCat(Request $request)
     {
 
@@ -137,7 +242,61 @@ class AdminController extends Controller
         }
     }
 
-
+/**
+ * @OA\Put(
+ *      path="/admin/categories/{id}",
+ *      operationId="updateCategoria",
+ *      tags={"Admin"},
+ *      summary="Actualizar una categoría existente",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la categoría a actualizar",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="nombre", type="string", example="Nombre actualizado de la categoría"),
+ *              @OA\Property(property="descripcion", type="string", example="Descripción actualizada de la categoría"),
+ *              @OA\Property(property="image", type="string", format="binary", description="Imagen actualizada de la categoría")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Categoría actualizada",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="id", type="integer"),
+ *              @OA\Property(property="nombre", type="string"),
+ *              @OA\Property(property="descripcion", type="string"),
+ *              @OA\Property(property="image_url", type="string"),
+ *              @OA\Property(property="created_at", type="string", format="date-time"),
+ *              @OA\Property(property="updated_at", type="string", format="date-time")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Categoría no encontrada",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Categoría no encontrada")
+ *          )
+ *      )
+ * )
+ */
     public function updateCat(Request $request, $id)
     {
         if (auth()->user()->role_id===1) {
@@ -181,6 +340,47 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Delete(
+ *      path="/admin/categories/{id}",
+ *      operationId="deleteCategoria",
+ *      tags={"Admin"},
+ *      summary="Eliminar una categoría",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la categoría a eliminar",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Categoría eliminada exitosamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Categoria eliminada exitosamente")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="No se pudo eliminar la categoría o tiene servicios relacionados",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="No se pudo eliminar la categoria o tiene servicios relacionados")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Categoría no encontrada",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Categoría no encontrada")
+ *          )
+ *      )
+ * )
+ */
     public function destroyCat($id)
     {
         if (auth()->user()->role_id===1) {
@@ -212,7 +412,65 @@ class AdminController extends Controller
 
 //CRUD SERVICIOS
 
-//mostrar servicios de una categoria
+//mostrar servicios de una categoria -admin
+
+/**
+ * @OA\Get(
+ *      path="/admin/categories/{id}/services",
+ *      operationId="getAdminCategoryServices",
+ *      tags={"Admin"},
+ *      summary="Mostrar servicios de una categoría para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la categoría",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Lista de servicios de la categoría",
+ *          @OA\JsonContent(
+ *              type="array",
+ *              @OA\Items(
+ *                  type="object",
+ *                  required={"id", "nombre", "vehiculo", "descripcion", "precio_h", "image_url", "created_at", "updated_at"},
+ *                  @OA\Property(property="id", type="integer", example=1),
+ *                  @OA\Property(property="nombre", type="string", example="Transporte liviano"),
+ *                  @OA\Property(property="vehiculo", type="string", example="Toyota Hiace"),
+ *                  @OA\Property(property="descripcion", type="string", example="Furgoneta de tamaño mediano con capacidad de 10 m³"),
+ *                  @OA\Property(property="precio_h", type="string", example="24.99"),
+ *                  @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291499/bgifc4ymzvmm9jbilmk0.jpg"),
+ *                  @OA\Property(property="created_at", type="string", format="date-time"),
+ *                  @OA\Property(property="updated_at", type="string", format="date-time"),
+ *                  @OA\Property(property="pivot", type="object",
+ *                      @OA\Property(property="categoria_id", type="integer", example=2),
+ *                      @OA\Property(property="servicio_id", type="integer", example=1)
+ *                  )
+ *              )
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Categoría no encontrada",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Categoría no encontrada")
+ *          )
+ *      )
+ * )
+ */
     public function showCat($id)
     {
         if (auth()->user()->role_id===1) {
@@ -230,6 +488,81 @@ class AdminController extends Controller
     }
 
 //C
+
+/**
+ * @OA\Post(
+ *      path="/admin/categories/{id}/newServ",
+ *      operationId="createAdminService",
+ *      tags={"Admin"},
+ *      summary="Crear un nuevo servicio en una categoría para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la categoría",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="Datos del nuevo servicio",
+ *          @OA\JsonContent(
+ *              required={"nombre", "vehiculo", "descripcion", "precio_h", "image", "categorias"},
+ *              @OA\Property(property="nombre", type="string", example="Servicio de transporte"),
+ *              @OA\Property(property="vehiculo", type="string", example="Toyota Hiace"),
+ *              @OA\Property(property="descripcion", type="string", example="Servicio de transporte para mudanzas"),
+ *              @OA\Property(property="precio_h", type="number", example=24.99),
+ *              @OA\Property(property="image", type="string", format="binary"),
+ *              @OA\Property(property="categorias", type="array", @OA\Items(type="integer", example=1, description="ID de categoría")),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=201,
+ *          description="Servicio creado exitosamente",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              required={"id", "nombre", "vehiculo", "descripcion", "precio_h", "image_url", "created_at", "updated_at"},
+ *              @OA\Property(property="id", type="integer", example=1),
+ *              @OA\Property(property="nombre", type="string", example="Servicio de transporte"),
+ *              @OA\Property(property="vehiculo", type="string", example="Toyota Hiace"),
+ *              @OA\Property(property="descripcion", type="string", example="Servicio de transporte para mudanzas"),
+ *              @OA\Property(property="precio_h", type="number", example=24.99),
+ *              @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291499/bgifc4ymzvmm9jbilmk0.jpg"),
+ *              @OA\Property(property="created_at", type="string", format="date-time"),
+ *              @OA\Property(property="updated_at", type="string", format="date-time"),
+ *              @OA\Property(property="categorias", type="array", @OA\Items(
+ *                  type="object",
+ *                  required={"id", "nombre", "descripcion", "image_url", "created_at", "updated_at"},
+ *                  @OA\Property(property="id", type="integer", example=1),
+ *                  @OA\Property(property="nombre", type="string", example="Categoría de transporte"),
+ *                  @OA\Property(property="descripcion", type="string", example="Categoría de servicios de transporte"),
+ *                  @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291493/usiynsb8itzqllpxj3mx.jpg"),
+ *                  @OA\Property(property="created_at", type="string", format="date-time"),
+ *                  @OA\Property(property="updated_at", type="string", format="date-time")
+ *              )),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=422,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object")
+ *          )
+ *      ),
+ * )
+ */
     public function storeServ(Request $request)
     {
         if (auth()->user()->role_id===1) {
@@ -302,7 +635,66 @@ class AdminController extends Controller
     }
 
 
-
+/**
+ * @OA\Get(
+ *      path="/admin/service/{id}",
+ *      operationId="showAdminService",
+ *      tags={"Admin"},
+ *      summary="Mostrar detalles de un servicio para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID del servicio",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Detalles del servicio",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              required={"id", "nombre", "vehiculo", "descripcion", "precio_h", "image_url", "created_at", "updated_at", "categorias"},
+ *              @OA\Property(property="id", type="integer", example=1),
+ *              @OA\Property(property="nombre", type="string", example="Servicio de transporte"),
+ *              @OA\Property(property="vehiculo", type="string", example="Toyota Hiace"),
+ *              @OA\Property(property="descripcion", type="string", example="Servicio de transporte para mudanzas"),
+ *              @OA\Property(property="precio_h", type="number", example=24.99),
+ *              @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291499/bgifc4ymzvmm9jbilmk0.jpg"),
+ *              @OA\Property(property="created_at", type="string", format="date-time"),
+ *              @OA\Property(property="updated_at", type="string", format="date-time"),
+ *              @OA\Property(property="categorias", type="array", @OA\Items(
+ *                  type="object",
+ *                  required={"id", "nombre", "descripcion", "image_url", "created_at", "updated_at"},
+ *                  @OA\Property(property="id", type="integer", example=1),
+ *                  @OA\Property(property="nombre", type="string", example="Categoría de transporte"),
+ *                  @OA\Property(property="descripcion", type="string", example="Categoría de servicios de transporte"),
+ *                  @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291493/usiynsb8itzqllpxj3mx.jpg"),
+ *                  @OA\Property(property="created_at", type="string", format="date-time"),
+ *                  @OA\Property(property="updated_at", type="string", format="date-time")
+ *              )),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Servicio no encontrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Servicio no encontrado")
+ *          )
+ *      )
+ * )
+ */
     public function showServ($id)
     {
         if (auth()->user()->role_id===1) {
@@ -319,6 +711,68 @@ class AdminController extends Controller
         }
     }
 
+
+    /**
+ * @OA\Put(
+ *      path="/admin/service/{id}",
+ *      operationId="updateAdminService",
+ *      tags={"Admin"},
+ *      summary="Actualizar un servicio para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID del servicio",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="nombre", type="string", example="Nuevo servicio"),
+ *              @OA\Property(property="vehiculo", type="string", example="Nuevo vehículo"),
+ *              @OA\Property(property="descripcion", type="string", example="Nueva descripción"),
+ *              @OA\Property(property="precio_h", type="number", example=30.50),
+ *              @OA\Property(property="image", type="string", format="binary")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Servicio actualizado exitosamente",
+ *          @OA\JsonContent(
+ *              type="object",
+ *              required={"id", "nombre", "vehiculo", "descripcion", "precio_h", "image_url", "created_at", "updated_at"},
+ *              @OA\Property(property="id", type="integer", example=1),
+ *              @OA\Property(property="nombre", type="string", example="Nuevo servicio"),
+ *              @OA\Property(property="vehiculo", type="string", example="Nuevo vehículo"),
+ *              @OA\Property(property="descripcion", type="string", example="Nueva descripción"),
+ *              @OA\Property(property="precio_h", type="number", example=30.50),
+ *              @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291499/bgifc4ymzvmm9jbilmk0.jpg"),
+ *              @OA\Property(property="created_at", type="string", format="date-time"),
+ *              @OA\Property(property="updated_at", type="string", format="date-time")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Acceso denegado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Servicio no encontrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Servicio no encontrado")
+ *          )
+ *      )
+ * )
+ */
     public function updateServ(Request $request, $id)
     {
         if (auth()->user()->role_id===1) {
@@ -373,7 +827,47 @@ class AdminController extends Controller
         }
     }
 
-
+/**
+ * @OA\Delete(
+ *      path="/admin/service/{id}",
+ *      operationId="deleteAdminService",
+ *      tags={"Admin"},
+ *      summary="Eliminar un servicio para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID del servicio",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Servicio eliminado exitosamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Servicio eliminado exitosamente")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="No se puede eliminar el servicio",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="No se puede eliminar el servicio porque están en proceso de atención")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Acceso denegado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Servicio no encontrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Servicio no encontrado")
+ *          )
+ *      )
+ * )
+ */
     public function destroyServ($id)
     {
         if (auth()->user()->role_id===1) {
@@ -465,6 +959,53 @@ class AdminController extends Controller
     }
 
 //pedidos
+
+/**
+ * @OA\Get(
+ *      path="/admin/pedidos",
+ *      operationId="getAdminPedidos",
+ *      tags={"Admin"},
+ *      summary="Obtener la lista de todos los pedidos para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Response(
+ *          response=200,
+ *          description="Lista de todos los pedidos",
+ *          @OA\JsonContent(
+ *              type="array",
+ *              @OA\Items(
+ *                  type="object",
+ *                  @OA\Property(property="id", type="integer", example=1),
+ *                  @OA\Property(property="partida", type="string", example="Mena 2"),
+ *                  @OA\Property(property="destino", type="string", example="Centro"),
+ *                  @OA\Property(property="m_pago", type="string", example="efectivo"),
+ *                  @OA\Property(property="iva", type="number", example=6.5976),
+ *                  @OA\Property(property="subtotal", type="number", example=48.3824),
+ *                  @OA\Property(property="p_total", type="number", example=54.98),
+ *                  @OA\Property(property="estado", type="string", example="pendiente"),
+ *                  @OA\Property(property="observacionCli", type="string", example="Sin observaciones"),
+ *                  @OA\Property(property="observacionAdmin", type="string", example=""),
+ *                  @OA\Property(property="comentarioAdmin", type="string", example=""),
+ *                  @OA\Property(property="comentarioCli", type="string", example=""),
+ *                  @OA\Property(property="fecha_hora", type="string", format="date-time", example="2023-07-17 15:30:00"),
+ *                  @OA\Property(property="calificacion", type="string", example="0"),
+ *                  @OA\Property(property="updated_at", type="string", format="date-time"),
+ *                  @OA\Property(property="created_at", type="string", format="date-time")
+ *              )
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      )
+ * )
+ */
     public function showPedidos(){
         if (auth()->user()->role_id===1) {
             $pedidos = Pedido::with('servicios', 'users')->get();
@@ -477,6 +1018,56 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Put(
+ *      path="/admin/pedidos/{id}",
+ *      operationId="updatePedidoState",
+ *      tags={"Admin"},
+ *      summary="Cambiar el estado de un pedido por el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          description="ID del pedido",
+ *          required=true,
+ *          in="path",
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="estado", type="string", enum={"aprobado", "rechazado"}, example="aprobado"),
+ *              @OA\Property(property="observacionAdmin", type="string", maxLength=40, nullable=true, example="Observaciones del administrador"),
+ *              @OA\Property(property="empleado_id", type="integer", nullable=true, example=3),
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Estado del pedido modificado correctamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Estado modificado correctamente")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado o error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado o error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object", nullable=true)
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Pedido no encontrado"
+ *      )
+ * )
+ */
     public function putState(Request $request, $id)
     {
         if (auth()->user()->role_id===1) {
@@ -546,6 +1137,48 @@ class AdminController extends Controller
 
     }
 
+    /**
+ * @OA\Get(
+ *      path="/admin/pedido/{id}",
+ *      operationId="getPedidoById",
+ *      tags={"Admin"},
+ *      summary="Mostrar un pedido por su ID para el usuario administrador",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          description="ID del pedido",
+ *          required=true,
+ *          in="path",
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Pedido encontrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Pedido encontrado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado"),
+ *              @OA\Property(property="userData", type="object", nullable=true)
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Pedido no encontrado"
+ *      )
+ * )
+ */
     public function showPedido($id)
     {
         if (auth()->user()->role_id===1) {
@@ -559,6 +1192,54 @@ class AdminController extends Controller
         }
     }
 
+    /**
+ * @OA\Put(
+ *      path="/admin/pedido/{id}",
+ *      operationId="agregarComentarioAdmin",
+ *      tags={"Admin"},
+ *      summary="Agregar un comentario administrativo a un pedido",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          description="ID del pedido",
+ *          required=true,
+ *          in="path",
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="comentarioAdmin", type="string", example="Comentario administrativo para el pedido.")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Comentario agregado exitosamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Comentario agregado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object", nullable=true)
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Pedido no encontrado"
+ *      )
+ * )
+ */
     public function comentarioAdmin(Request $request, $id)
     {
         if (auth()->user()->role_id===1) {

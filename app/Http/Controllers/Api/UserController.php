@@ -11,22 +11,60 @@ use App\Models\Servicio;
 use App\Models\User;
 
 use Illuminate\Support\Facades\Validator;
+/**
+ * @OA\Schema(
+ *      schema="Categoria",
+ *      required={"id", "nombre", "descripcion", "image_url"},
+ *      @OA\Property(property="id", type="integer", example=1),
+ *      @OA\Property(property="nombre", type="string", example="Mudanzas Básicas/sencillas"),
+ *      @OA\Property(property="descripcion", type="string", example="Para mudanzas sencillas y economicas, incluye servicios Camión/Transporte y de Personal"),
+ *      @OA\Property(property="image_url", type="string", example="https://res.cloudinary.com/dq81q15op/image/upload/v1691291493/usiynsb8itzqllpxj3mx.jpg"),
+ *      @OA\Property(property="created_at", type="string", format="date-time"),
+ *      @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ */
+
 
 class UserController extends Controller
 {
-    //
 
+    /**
+     * @OA\Get(
+     *      path="/profile",
+     *      operationId="getUserProfile",
+     *      tags={"Perfil"},
+     *      summary="Obtener perfil del usuario autenticado",
+     *      security={{ "sanctum":{} }},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Perfil de usuario",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="PERFIL DE USUARIO")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Acceso denegado",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="acceso denegado")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="No autorizado"
+     *      )
+     * )
+     */
     public function profile(Request $request) {
 
-        if (auth()->user()->role_id===2) {
+        if (auth()->user()) {
             return response()->json([
                 "message" => "PERFIL DE USUARIO",
                 "userData" => auth()->user()
             ]);
         } else {
             return response()->json([
-                "message" => "acceso denegado",
-                "userData" => auth()->user()
+                "message" => "acceso denegado"
             ], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -34,6 +72,34 @@ class UserController extends Controller
 
 //categorias
 
+    /**
+     * @OA\Get(
+     *      path="/cli/categories",
+     *      operationId="getUserCategories",
+     *      tags={"Cliente"},
+     *      summary="Obtener todas las categorías para el usuario autenticado",
+     *      security={{ "sanctum":{} }},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Lista de categorías",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/Categoria")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Acceso denegado",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="acceso denegado")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="No autorizado"
+     *      )
+     * )
+     */
     public function indexCat()
     {
         if (auth()->user()->role_id===2) {
@@ -49,7 +115,45 @@ class UserController extends Controller
 
 //servicios
 
-    //mostrar servicios de una categoria
+
+/**
+ * @OA\Get(
+ *      path="/cli/categories/{id}/services",
+ *      operationId="getCategoryServices",
+ *      tags={"Cliente"},
+ *      summary="Obtener servicios de una categoría para el usuario autenticado",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID de la categoría",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Lista de servicios de la categoría"
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Categoría no encontrada",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Categoría no encontrada")
+ *          )
+ *      )
+ * )
+ */
     public function showCat($id)
     {
         if (auth()->user()->role_id===2) {
@@ -67,6 +171,70 @@ class UserController extends Controller
 
 //crear pedido
 
+/**
+ * @OA\Post(
+ *      path="/cli/pedidos",
+ *      operationId="createPedido",
+ *      tags={"Cliente"},
+ *      summary="Crear un nuevo pedido para el usuario autenticado",
+ *      security={{ "sanctum":{} }},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="partida", type="string", example="Dirección de partida"),
+ *              @OA\Property(property="destino", type="string", example="Dirección de destino"),
+ *              @OA\Property(property="m_pago", type="string", enum={"transferencia", "efectivo"}, example="transferencia"),
+ *              @OA\Property(property="servicios", type="array", @OA\Items(type="integer", example=1), example={1, 2}),
+ *              @OA\Property(property="observaciones", type="string", example="Observaciones adicionales"),
+ *              @OA\Property(property="fecha_hora", type="string", format="date-time", example="2023-08-15 12:00:00")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Pedido creado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Pedido creado"),
+ *              @OA\Property(property="user", type="object",
+ *                  @OA\Property(property="partida", type="string"),
+ *                  @OA\Property(property="destino", type="string"),
+ *                  @OA\Property(property="m_pago", type="string"),
+ *                  @OA\Property(property="iva", type="number", format="double"),
+ *                  @OA\Property(property="subtotal", type="number", format="double"),
+ *                  @OA\Property(property="p_total", type="number", format="double"),
+ *                  @OA\Property(property="estado", type="string"),
+ *                  @OA\Property(property="observacionCli", type="string"),
+ *                  @OA\Property(property="observacionAdmin", type="string"),
+ *                  @OA\Property(property="comentarioAdmin", type="string"),
+ *                  @OA\Property(property="comentarioCli", type="string"),
+ *                  @OA\Property(property="fecha_hora", type="string", format="date-time"),
+ *                  @OA\Property(property="calificacion", type="string"),
+ *                  @OA\Property(property="updated_at", type="string", format="date-time"),
+ *                  @OA\Property(property="created_at", type="string", format="date-time"),
+ *                  @OA\Property(property="id", type="integer")
+ *              )
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Error en la validación de datos",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error en la validación de datos"),
+ *              @OA\Property(property="errors", type="object")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=403,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      )
+ * )
+ */
     public function newPedido(Request $request)
     {
         if (auth()->user()->role_id===2) {
@@ -144,6 +312,30 @@ class UserController extends Controller
 
 // mostrar pedidos del usuario
 
+/**
+ * @OA\Get(
+ *      path="/cli/pedidos",
+ *      operationId="getUserPedidos",
+ *      tags={"Cliente"},
+ *      summary="Obtener los pedidos del usuario autenticado",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Response(
+ *          response=200,
+ *          description="Lista de pedidos del usuario"
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      )
+ * )
+ */
     public function showPedido(){
         if (auth()->user()->role_id===2) {
 
@@ -160,6 +352,50 @@ class UserController extends Controller
         }
     }
 
+    /**
+ * @OA\Post(
+ *      path="/cli/pedidos/{id}/comentario",
+ *      operationId="addPedidoComentario",
+ *      tags={"Cliente"},
+ *      summary="Agregar comentario y calificación a un pedido",
+ *      security={{ "sanctum":{} }},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID del pedido",
+ *          @OA\Schema(type="integer")
+ *      ),
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="comentarioCli", type="string", example="Buen servicio, entrega puntual."),
+ *              @OA\Property(property="calificacion", type="integer", example=4)
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Comentario agregado al pedido",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Comentario agregado")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado o error de validación",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado o error de validación")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Pedido no encontrado",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Pedido no encontrado")
+ *          )
+ *      )
+ * )
+ */
     public function comentarPedido(Request $request, $id)
     {
         if (auth()->user()->role_id===2) {
@@ -204,6 +440,36 @@ class UserController extends Controller
 
     }
 
+
+    /**
+ * @OA\Post(
+ *      path="/cli/cotizar",
+ *      operationId="cotizarServicios",
+ *      tags={"Cliente"},
+ *      summary="Realizar cotización de servicios",
+ *      security={{ "sanctum":{} }},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="servicios", type="array", @OA\Items(type="integer", example=1))
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Cotización de servicios",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Cotización")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Acceso denegado o error de validación",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="acceso denegado o error de validación")
+ *          )
+ *      )
+ * )
+ */
     public function cotizar(Request $request)
     {
         if (auth()->user()->role_id===2) {
