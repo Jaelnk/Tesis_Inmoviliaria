@@ -1,12 +1,13 @@
-# 📄 Proyecto de Tesis: Backend para servicios informáticos en Quito
+# 📄 Proyecto de Tesis: Backend para sistema de gestión de mudanzas en Quito
 
 El presente proyecto contempla el desarrollo de un backend, el cual otorga una serie de endpoints que permiten la creación gestión de servicios de mudanzas en la ciudad de Quito.
 
 ## Tecnologías 
 
-- ![Logo de PHP](https://link-al-logo-de-php.com) PHP
-- ![Logo de Laravel](https://link-al-logo-de-laravel.com) Laravel
-- ![Logo de MySQL](https://link-al-logo-de-mysql.com) MySQL
+- PHP
+- Laravel
+- MySQL
+- DigitalOcean
 
 🌐 **Despliegue**
 
