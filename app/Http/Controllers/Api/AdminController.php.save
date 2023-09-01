@@ -40,7 +40,7 @@ class AdminController extends Controller
 
     /**
  * @OA\Post(
- *      path="/admin/registerEmployee",
+ *      path",
  *      operationId="registerEmployee",
  *      tags={"Admin"},
  *      summary="Registrar nuevo empleado",
@@ -962,7 +962,7 @@ class AdminController extends Controller
 
 /**
  * @OA\Get(
- *      path="/pedidos",
+ *      path="/admin/pedidos",
  *      operationId="getAdminPedidos",
  *      tags={"Admin"},
  *      summary="Obtener la lista de todos los pedidos para el usuario administrador",
@@ -1020,7 +1020,7 @@ class AdminController extends Controller
 
     /**
  * @OA\Put(
- *      path="/pedidos/{id}",
+ *      path="/admin/pedidos/{id}",
  *      operationId="updatePedidoState",
  *      tags={"Admin"},
  *      summary="Cambiar el estado de un pedido por el usuario administrador",
@@ -1139,7 +1139,7 @@ class AdminController extends Controller
 
     /**
  * @OA\Get(
- *      path="/pedido/{id}",
+ *      path="/admin/pedido/{id}",
  *      operationId="getPedidoById",
  *      tags={"Admin"},
  *      summary="Mostrar un pedido por su ID para el usuario administrador",
@@ -1194,7 +1194,7 @@ class AdminController extends Controller
 
     /**
  * @OA\Put(
- *      path="/pedido/{id}",
+ *      path="/admin/pedido/{id}",
  *      operationId="agregarComentarioAdmin",
  *      tags={"Admin"},
  *      summary="Agregar un comentario administrativo a un pedido",

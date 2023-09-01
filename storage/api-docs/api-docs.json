@@ -6,7 +6,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/register/employee": {
+        "/admin/registerEmployee": {
             "post": {
                 "tags": [
                     "Admin"
@@ -1159,7 +1159,7 @@
                 ]
             }
         },
-        "/admin/pedidos": {
+        "/pedidos": {
             "get": {
                 "tags": [
                     "Admin"
@@ -1274,7 +1274,7 @@
                 ]
             }
         },
-        "/admin/pedidos/{id}": {
+        "/pedidos/{id}": {
             "put": {
                 "tags": [
                     "Admin"
@@ -1375,7 +1375,7 @@
                 ]
             }
         },
-        "/admin/pedido/{id}": {
+        "/pedido/{id}": {
             "get": {
                 "tags": [
                     "Admin"
@@ -2272,43 +2272,7 @@
                 ]
             }
         },
-        "/cli/pedidos": {
-            "get": {
-                "tags": [
-                    "Cliente"
-                ],
-                "summary": "Obtener los pedidos del usuario autenticado",
-                "operationId": "getUserPedidos",
-                "responses": {
-                    "200": {
-                        "description": "Lista de pedidos del usuario"
-                    },
-                    "400": {
-                        "description": "Acceso denegado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "acceso denegado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "No autorizado"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
+        "/newPedido": {
             "post": {
                 "tags": [
                     "Cliente"
@@ -2485,8 +2449,46 @@
                 ]
             }
         },
-        "/cli/pedidos/{id}/comentario": {
-            "post": {
+        "/cli/pedidos": {
+            "get": {
+                "tags": [
+                    "Cliente"
+                ],
+                "summary": "Obtener los pedidos del usuario autenticado",
+                "operationId": "getUserPedidos",
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos del usuario"
+                    },
+                    "400": {
+                        "description": "Acceso denegado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "acceso denegado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/cli/pedido/{id}": {
+            "put": {
                 "tags": [
                     "Cliente"
                 ],
@@ -2580,7 +2582,7 @@
                 ]
             }
         },
-        "/cli/cotizar": {
+        "/cotizarpedido": {
             "post": {
                 "tags": [
                     "Cliente"

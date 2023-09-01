@@ -173,7 +173,7 @@ class UserController extends Controller
 
 /**
  * @OA\Post(
- *      path="/cli/pedidos",
+ *      path="/newPedido",
  *      operationId="createPedido",
  *      tags={"Cliente"},
  *      summary="Crear un nuevo pedido para el usuario autenticado",
@@ -353,8 +353,8 @@ class UserController extends Controller
     }
 
     /**
- * @OA\Post(
- *      path="/cli/pedidos/{id}/comentario",
+ * @OA\Put(
+ *      path="/cli/pedido/{id}",
  *      operationId="addPedidoComentario",
  *      tags={"Cliente"},
  *      summary="Agregar comentario y calificación a un pedido",
@@ -443,7 +443,7 @@ class UserController extends Controller
 
     /**
  * @OA\Post(
- *      path="/cli/cotizar",
+ *      path="/cotizarpedido",
  *      operationId="cotizarServicios",
  *      tags={"Cliente"},
  *      summary="Realizar cotización de servicios",
